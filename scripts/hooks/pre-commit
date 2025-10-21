@@ -1,0 +1,59 @@
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running pre-commit checks..."
+
+# 1. Validate zensical.toml syntax if staged
+if git diff --cached --name-only | grep -q '^zensical\.toml$'; then
+  echo "-> Checking zensical.toml TOML syntax..."
+  python3 -c 'import tomllib; tomllib.load(open("zensical.toml", "rb"))'
+fi
+
+# 2. Identify staged Markdown files (excluding synced external repos)
+STAGED_MD=$(
+  git diff --cached --name-only --diff-filter=ACM |
+  grep -E '\.md$' |
+  grep -vE '^docs/faith/(the-morning-word|matthew-henry-prayer)/' ||
+  true
+)
+
+# 3. Automatically format staged Markdown files
+if [ -n "${STAGED_MD}" ]; then
+  echo "-> Auto-formatting staged Markdown files..."
+
+  while IFS= read -r file; do
+    [ -f "$file" ] || continue
+
+    # Ensure exactly one trailing newline
+    python3 - "$file" <<'PY'
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+content = path.read_bytes()
+path.write_bytes(content.rstrip(b"\n") + b"\n")
+PY
+
+    # Re-stage formatted file
+    git add -- "$file"
+  done <<< "$STAGED_MD"
+fi
+
+# 4. Lint staged Markdown files
+if [ -n "${STAGED_MD}" ]; then
+  echo "-> Linting staged Markdown files..."
+
+  echo "${STAGED_MD}" |
+    xargs pymarkdown --config .pymarkdown scan
+fi
+
+# 5. Verify Zensical build if config or docs changed
+if git diff --cached --name-only | grep -qE '^(zensical\.toml|docs/)'; then
+  echo "-> Verifying zensical-i18n build..."
+  ./scripts/sync_repos.sh >/dev/null
+  zensical-i18n build
+fi
+
+echo "All pre-commit checks passed."
+

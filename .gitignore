@@ -1,0 +1,9 @@
+
+# Build & i18n staging artifacts
+site/
+.zensical-i18n/
+.cache/
+
+# Build-time synced external Markdown repositories
+docs/faith/the-morning-word/
+docs/faith/matthew-henry-prayer/

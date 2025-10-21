@@ -1,0 +1,88 @@
+
+[project]
+site_name = "Unting QuietBench 札记"
+site_url = "https://tiongchong.github.io/"
+site_description = "Reflections on faith, devotion, reading, engineering, and craft."
+site_author = "Tiong Chong"
+repo_url = "https://github.com/tiongchong/tiongchong.github.io"
+docs_dir = "docs"
+site_dir = "site"
+
+# English navigation (default)
+nav = [
+  { "About" = "index.md" },
+  { "Faith & Devotion" = [
+    { "Overview" = "faith/index.md" },
+  ] },
+  { "Reading" = "reading/index.md" },
+  { "Projects & Craft" = "projects/index.md" },
+]
+
+# Theme
+[project.theme]
+language = "en"
+direction = "ltr"
+
+# Automatic OS light mode + manual toggle
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Automatic OS dark mode + manual toggle
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+# Internationalisation
+[project.plugins.i18n]
+docs_structure = "folder"
+fallback_to_default = true
+reconfigure_material = true
+
+# English (default)
+[[project.plugins.i18n.languages]]
+locale = "en"
+name = "English"
+default = true
+build = true
+
+# Simplified Chinese
+[[project.plugins.i18n.languages]]
+locale = "zh"
+name = "中文"
+build = true
+nav_translations = { About = "关于我", "Faith & Devotion" = "信仰与灵修", Overview = "概览", Reading = "阅读与书摘", "Projects & Craft" = "项目与手作" }
+
+nav = [
+  { "关于我" = "index.md" },
+  { "信仰与灵修" = [
+    { "概览" = "faith/index.md" },
+  ] },
+  { "阅读与书摘" = "reading/index.md" },
+  { "项目与手作" = "projects/index.md" },
+]
+
+# Bahasa Melayu
+[[project.plugins.i18n.languages]]
+locale = "ms"
+name = "Bahasa Melayu"
+build = true
+nav_translations = { About = "Tentang Saya", "Faith & Devotion" = "Iman & Devosi", Overview = "Ringkasan", Reading = "Bacaan", "Projects & Craft" = "Projek & Pertukangan" }
+
+nav = [
+  { "Tentang Saya" = "index.md" },
+  { "Iman & Devosi" = [
+    { "Ringkasan" = "faith/index.md" },
+  ] },
+  { "Bacaan" = "reading/index.md" },
+  { "Projek & Pertukangan" = "projects/index.md" },
+]
+
+# Google Analytics
+[project.extra.analytics]
+provider = "google"
+property = ""
